@@ -13,7 +13,7 @@ class Chao {
         var pos = this.terra.position;
         push();
         rectMode(CENTER);
-        fill("gray");
+        fill(47,27,13);
         noStroke();
         rect(pos.x, pos.y, this.lar, this.alt);
         pop();

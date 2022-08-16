@@ -29,7 +29,7 @@ class Rope
       this.body = null;
     }
     
-    show()
+    draw()
     {
       if(this.body!=null)
         {
