@@ -11,4 +11,8 @@ class Food {
                 })
     World.add(engine.world, this.fio);
     }
+
+    detonaRalfh(){
+      World.remove(engine.world, this.fio);
+    }
 }
