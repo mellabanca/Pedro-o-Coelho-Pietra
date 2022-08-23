@@ -20,6 +20,12 @@ var amora;
 var edward;
 var piscapisca;
 var hungry;
+var tristeza;
+var aviao;
+var hungry1;
+var jokenpo;
+var tristeza1;
+var salsa;
 
 function preload(){
   papelDeParede = loadImage("./Imagens/background.png");
@@ -27,12 +33,21 @@ function preload(){
   pedro = loadImage("./Imagens/Rabbit-01.png");
   piscapisca = loadAnimation("./Imagens/blink_1.png","./Imagens/blink_2.png","./Imagens/blink_3.png");
   hungry = loadAnimation("./Imagens/eat_0.png","./Imagens/eat_1.png","./Imagens/eat_2.png","./Imagens/eat_3.png","./Imagens/eat_4.png");
+  tristeza = loadAnimation ("./Imagens/sad_1.png", "./Imagens/sad_2.png","./Imagens/sad_3.png");
+  aviao = loadSound("./Sons/air.wav");
+  hungry1 = loadSound("./Sons/eating_sound.mp3");
+  jokenpo = loadSound("./Sons/rope_cut.mp3");
+  tristeza1 = loadSound("./Sons/sad.wav");
+  salsa = loadSound("./Sons/sound1.mp3");
 
   piscapisca.playing = true;
   hungry.playing = true;
 
   piscapisca.looping = true;
   hungry.looping = false;
+
+  tristeza.playing = true;
+  tristeza.looping = false;
 }
 
 function setup() 
@@ -41,8 +56,9 @@ function setup()
   engine = Engine.create();
   world = engine.world;
 
-  piscapisca.frameDelay = 20;
-  hungry.frameDelay = 20;
+  piscapisca.frameDelay = 10;
+  hungry.frameDelay = 10;
+  tristeza.frameDelay = 10;
  
   rectMode(CENTER);
   ellipseMode(RADIUS);
@@ -63,7 +79,9 @@ function setup()
   amora.scale = 0.3;
   amora.addAnimation("piscando", piscapisca);
   amora.addAnimation("comendo", hungry);
+  amora.addAnimation("chorando", tristeza);
   amora.changeAnimation("piscando");
+  
 
   edward = createImg ("./Imagens/cut_btn.png");
   edward.position (220, 30);
@@ -79,8 +97,19 @@ function draw()
   
   lama.draw();
   tarzan.draw();
-  image(magali,foodtruck.position.x, foodtruck.position.y, 75, 75);
+  
+  if (foodtruck !== null){
+    image(magali,foodtruck.position.x, foodtruck.position.y, 75, 75);
+  }
 
+  if(coliseu(amora, foodtruck) === true){
+    amora.changeAnimation ("comendo");
+  }
+
+  if(foodtruck !== null && foodtruck.position.y >= 650){
+    amora.changeAnimation("chorando");
+    foodtruck = null;
+  }
   drawSprites ();
 }
 
@@ -90,4 +119,17 @@ function neymar(){
   fiodental = null;
 }
 
-
+function coliseu(predo, malagui){
+  if(malagui !== null){
+   var regua = dist(predo.position.x, predo.position.y, malagui.position.x, malagui.position.y);
+  if (regua <= 80){
+    World.remove(engine.world, foodtruck);
+    foodtruck = null;
+    return true;
+  } 
+  else{
+    return false;
+  }
+  }
+  
+}
