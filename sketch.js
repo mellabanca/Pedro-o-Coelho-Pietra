@@ -26,6 +26,14 @@ var hungry1;
 var jokenpo;
 var tristeza1;
 var salsa;
+var it;
+var alerta;
+var samurai;
+var pontilhada;
+var escalada;
+var camadegato;
+var ligacao;
+var cadarco;
 
 function preload(){
   papelDeParede = loadImage("./Imagens/background.png");
@@ -52,9 +60,24 @@ function preload(){
 
 function setup() 
 {
-  createCanvas(500,700);
+
+  var telefoneSemFio = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if(telefoneSemFio){
+    canW = displayWidth;
+    canH = displayHeight;
+    createCanvas(displayWidth+80, displayHeight);
+  } else {
+    canW = windowWidth;
+    canH = windowHeight;
+    createCanvas(windowWidth, windowHeight);
+  }
+
+  
   engine = Engine.create();
   world = engine.world;
+  salsa.play();
+
 
   piscapisca.frameDelay = 10;
   hungry.frameDelay = 10;
@@ -65,16 +88,26 @@ function setup()
   imageMode(CENTER);
   textSize(50)
 
-  lama = new Chao(200, 690, 600, 20);
+  lama = new Chao(200, canH, 600, 20);
 
-  tarzan = new Rope (6, {x: 245, y: 30});
+  tarzan = new Rope (8, {x: 40, y: 30});
+
+  escalada = new Rope (7, {x: 370, y: 40});
+
+  camadegato = new Rope (4, {x: 400, y: 225});
+
 
   foodtruck = Bodies.circle (300, 300, 15);
   Matter.Composite.add(tarzan.body, foodtruck);
 
   fiodental = new Food (tarzan, foodtruck);
 
-  amora = createSprite (250, 575, 100, 100);
+  ligacao = new Food (escalada, foodtruck);
+
+  cadarco = new Food (camadegato, foodtruck);
+
+
+  amora = createSprite (170, canH-120, 100, 100);
   amora.addImage(pedro);
   amora.scale = 0.3;
   amora.addAnimation("piscando", piscapisca);
@@ -84,19 +117,37 @@ function setup()
   
 
   edward = createImg ("./Imagens/cut_btn.png");
-  edward.position (220, 30);
+  edward.position (20, 30);
   edward.size (50, 50);
   edward.mouseClicked(neymar);
+
+  samurai = createImg ("./Imagens/cut_btn.png");
+  samurai.position (330, 35);
+  samurai.size (50, 50);
+  samurai.mouseClicked(messi);
+
+  pontilhada = createImg ("./Imagens/cut_btn.png");
+  pontilhada.position (360, 200);
+  pontilhada.size (50, 50);
+  pontilhada.mouseClicked(cr7);
+
+  alerta = createImg ("./Imagens/mute.png");
+  alerta.position (450, 20);
+  alerta.size (50, 50);
+  alerta.mouseClicked(surdo);
 }
+
 
 function draw() 
 {
   background(51);
-  image(papelDeParede, width/2, height/2, 500, 700);
+  image(papelDeParede, width/2, height/2, displayWidth+80, displayHeight);
   Engine.update(engine);
   
   lama.draw();
   tarzan.draw();
+  escalada.draw();
+  camadegato.draw();
   
   if (foodtruck !== null){
     image(magali,foodtruck.position.x, foodtruck.position.y, 75, 75);
@@ -104,11 +155,14 @@ function draw()
 
   if(coliseu(amora, foodtruck) === true){
     amora.changeAnimation ("comendo");
+    hungry1.play();
   }
 
-  if(foodtruck !== null && foodtruck.position.y >= 650){
+  if(foodtruck !== null && foodtruck.position.y >= height-70){
     amora.changeAnimation("chorando");
     foodtruck = null;
+    salsa.stop();
+    tristeza1.play();
   }
   drawSprites ();
 }
@@ -117,7 +171,23 @@ function neymar(){
   tarzan.break();
   fiodental.detonaRalfh();
   fiodental = null;
+  jokenpo.play();
 }
+
+function messi(){
+  escalada.break();
+  ligacao.detonaRalfh();
+  ligacao = null;
+  jokenpo.play();
+}
+
+function cr7(){
+  camadegato.break();
+  cadarco.detonaRalfh();
+  cadarco = null;
+  jokenpo.play();
+}
+   
 
 function coliseu(predo, malagui){
   if(malagui !== null){
@@ -132,4 +202,18 @@ function coliseu(predo, malagui){
   }
   }
   
+}
+
+function up(){
+  Matter.Body.applyForce(foodtruck, {x: 0, y: 0}, {x: 0.01, y:0});
+  aviao.play();
+}
+
+function surdo(){
+  if (salsa.isPlaying()){
+    salsa.stop();
+  }
+  else{
+    salsa.play();
+  }
 }
